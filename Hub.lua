@@ -86,6 +86,16 @@ RejoinBtn.MouseButton1Click:Connect(function()
     TeleportService:Teleport(game.PlaceId, LocalPlayer)
 end)
 
+-- Auto Buy Seed button
+local BuySeedBtn = Instance.new("TextButton", Side)
+BuySeedBtn.Size = UDim2.new(1, 0, 0, 40)
+BuySeedBtn.Position = UDim2.new(0, 0, 0, 60) -- below Auto Rejoin
+BuySeedBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+BuySeedBtn.Text = "🌱 Auto Buy Seed"
+BuySeedBtn.TextColor3 = Color3.new(1, 1, 1)
+BuySeedBtn.Font = Enum.Font.SourceSansBold
+BuySeedBtn.TextSize = 16
+
 -- Auto Buy Logic (toggle on/off)
 local buying = false
 
