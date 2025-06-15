@@ -4,7 +4,7 @@ local CoreGui = game:GetService("CoreGui")
 
 -- GUI Setup
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "TutorialHubUI"
+ScreenGui.Name = "TEST SC GAG"
 ScreenGui.ResetOnSpawn = false
 if syn and syn.protect_gui then
     syn.protect_gui(ScreenGui)
