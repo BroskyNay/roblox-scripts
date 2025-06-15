@@ -1,21 +1,23 @@
 --====================================================
---  CUSTOM HUB  |  now with a Rejoin button in content
+--  CUSTOM HUB  |  Rejoin + Auto Buy Seed (Carrot)
 --====================================================
 
 --// Services
-local Players          = game:GetService("Players")
-local TeleportService  = game:GetService("TeleportService")
-local LocalPlayer      = Players.LocalPlayer
-local CoreGui          = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterGui = game:GetService("StarterGui")
+local LocalPlayer = Players.LocalPlayer
+local CoreGui = game:GetService("CoreGui")
 
---// Root GUI ------------------------------------------------
+--// Root GUI
 local HubGui = Instance.new("ScreenGui")
 HubGui.Name = "TutorialHubUI"
 HubGui.ResetOnSpawn = false
 if syn and syn.protect_gui then syn.protect_gui(HubGui) end
-HubGui.Parent = CoreGui   -- put straight into CoreGui so every executor sees it
+HubGui.Parent = CoreGui
 
---// Main draggable window -----------------------------------
+--// Main Window
 local Main = Instance.new("Frame", HubGui)
 Main.Size = UDim2.new(0, 600, 0, 350)
 Main.Position = UDim2.new(0.5, -300, 0.5, -175)
@@ -24,7 +26,7 @@ Main.BorderSizePixel = 0
 Main.Active = true
 Main.Draggable = true
 
---// Title bar -----------------------------------------------
+-- Title Bar
 local Title = Instance.new("TextLabel", Main)
 Title.Size = UDim2.new(1, 0, 0, 30)
 Title.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
@@ -33,7 +35,7 @@ Title.TextColor3 = Color3.new(1, 1, 1)
 Title.TextSize = 18
 Title.Font = Enum.Font.SourceSansBold
 
--- Close “X” button
+-- Close Button
 local Close = Instance.new("TextButton", Main)
 Close.Size = UDim2.new(0, 30, 0, 30)
 Close.Position = UDim2.new(1, -30, 0, 0)
@@ -46,82 +48,77 @@ Close.MouseButton1Click:Connect(function()
     HubGui:Destroy()
 end)
 
---// Sidebar -------------------------------------------------
+-- Sidebar
 local Side = Instance.new("Frame", Main)
 Side.Size = UDim2.new(0, 140, 1, -30)
 Side.Position = UDim2.new(0, 0, 0, 30)
 Side.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 
--- Sidebar button (your icon + label)
+-- Sidebar Button
 local AutoBtn = Instance.new("TextButton", Side)
 AutoBtn.Size = UDim2.new(1, 0, 0, 40)
 AutoBtn.Position = UDim2.new(0, 0, 0, 10)
 AutoBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-AutoBtn.Text = "⚙️  Auto Rejoin"
+AutoBtn.Text = "⚙️  Auto Tools"
 AutoBtn.TextColor3 = Color3.new(1,1,1)
 AutoBtn.Font = Enum.Font.SourceSansBold
 AutoBtn.TextSize = 16
 
---// Content area --------------------------------------------
+-- Content Area
 local Content = Instance.new("Frame", Main)
 Content.Size = UDim2.new(1, -140, 1, -30)
 Content.Position = UDim2.new(0, 140, 0, 30)
 Content.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 
-----------------------------------------------------------------
---  NEW ▸ Rejoin button INSIDE the content panel
-----------------------------------------------------------------
+-- Rejoin Button
 local RejoinBtn = Instance.new("TextButton", Content)
 RejoinBtn.Size = UDim2.new(0, 150, 0, 45)
 RejoinBtn.Position = UDim2.new(0, 20, 0, 20)
 RejoinBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-RejoinBtn.BorderSizePixel   = 0
-RejoinBtn.Text              = "🔁  REJOIN"
-RejoinBtn.TextColor3        = Color3.new(1,1,1)
-RejoinBtn.TextSize          = 20
-RejoinBtn.Font              = Enum.Font.SourceSansBold
-RejoinBtn.Active            = true
-
+RejoinBtn.BorderSizePixel = 0
+RejoinBtn.Text = "🔁  REJOIN"
+RejoinBtn.TextColor3 = Color3.new(1,1,1)
+RejoinBtn.TextSize = 20
+RejoinBtn.Font = Enum.Font.SourceSansBold
+RejoinBtn.Active = true
 RejoinBtn.MouseButton1Click:Connect(function()
     TeleportService:Teleport(game.PlaceId, LocalPlayer)
 end)
 
-local BuySeedBtn = Instance.new("TextButton")
-BuySeedBtn.Size = UDim2.new(1, 0, 0, 40)
-BuySeedBtn.Position = UDim2.new(0, 0, 0, 80)
-BuySeedBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-BuySeedBtn.Text = "🌱 Auto Buy Seed"
-BuySeedBtn.TextColor3 = Color3.new(1, 1, 1)
-BuySeedBtn.Font = Enum.Font.SourceSansBold
+-- Auto Buy Seed Button
+local BuySeedBtn = Instance.new("TextButton", Content)
+BuySeedBtn.Size = UDim2.new(0, 150, 0, 45)
+BuySeedBtn.Position = UDim2.new(0, 20, 0, 80)
+BuySeedBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+BuySeedBtn.BorderSizePixel = 0
+BuySeedBtn.Text = "🌱 Auto Buy Carrot"
+BuySeedBtn.TextColor3 = Color3.new(1,1,1)
 BuySeedBtn.TextSize = 16
-BuySeedBtn.Parent = Side
+BuySeedBtn.Font = Enum.Font.SourceSansBold
+BuySeedBtn.Parent = Content
 
--- Auto Buy Logic (toggle on/off)
+-- Auto Buy Logic
 local buying = false
+local remote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("DataStream")
+local seedName = "Carrot Seed"
 
 BuySeedBtn.MouseButton1Click:Connect(function()
     buying = not buying
-    BuySeedBtn.Text = buying and "✅ Buying Seeds..." or "🌱 Auto Buy Seed"
-    
+    BuySeedBtn.Text = buying and "✅ Buying Carrot..." or "🌱 Auto Buy Carrot"
+
     if buying then
-        -- Start a coroutine so it doesn't freeze the UI
         coroutine.wrap(function()
             while buying do
                 pcall(function()
-                    -- EDIT THIS: Replace with the actual Remote path and args
-                    local remote = game:GetService("ReplicatedStorage"):WaitForChild("BuySeed")
-                    remote:FireServer("Tomato", 1) -- (seedName, amount)
+                    remote:FireServer("Buy", seedName, 1)
                 end)
-                wait(2) -- Adjust delay as needed
+                wait(2)
             end
         end)()
     end
 end)
 
-----------------------------------------------------------------
---  OPTIONAL ▸ hook sidebar button to open this page
-----------------------------------------------------------------
+-- Tab Button Logic
 AutoBtn.MouseButton1Click:Connect(function()
-    -- if you add more pages later, toggle them here
     Content.Visible = true
 end)
