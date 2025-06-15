@@ -1,4 +1,3 @@
--- Custom Hub UI (Tutorial Hub Style)
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 
