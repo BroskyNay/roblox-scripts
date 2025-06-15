@@ -1,0 +1,76 @@
+-- Auto Plant Fruit Script with Start / Stop UI
+-- Works with Wave, Fluxus, etc.
+
+-- SETTINGS
+local REMOTE_NAME = "PlantFruit" -- Change if your game's remote is different
+local FRUIT_NAME = "Apple"       -- Change to Banana, Orange, etc.
+
+-- SCRIPT
+local Players = game:GetService("Players")
+local RS = game:GetService("ReplicatedStorage")
+local LP = Players.LocalPlayer
+local GUI = Instance.new("ScreenGui", LP:WaitForChild("PlayerGui"))
+GUI.Name = "AutoPlantGUI"
+
+-- UI Frame
+local frame = Instance.new("Frame", GUI)
+frame.Size = UDim2.new(0, 200, 0, 100)
+frame.Position = UDim2.new(0.5, -100, 0.8, 0)
+frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+frame.Active = true
+frame.Draggable = true
+
+-- Start Button
+local startBtn = Instance.new("TextButton", frame)
+startBtn.Size = UDim2.new(0.45, 0, 0.5, 0)
+startBtn.Position = UDim2.new(0.05, 0, 0.25, 0)
+startBtn.Text = "Start"
+startBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+startBtn.TextColor3 = Color3.new(1, 1, 1)
+startBtn.Font = Enum.Font.SourceSansBold
+startBtn.TextSize = 20
+
+-- Stop Button
+local stopBtn = Instance.new("TextButton", frame)
+stopBtn.Size = UDim2.new(0.45, 0, 0.5, 0)
+stopBtn.Position = UDim2.new(0.5, 0, 0.25, 0)
+stopBtn.Text = "Stop"
+stopBtn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
+stopBtn.TextColor3 = Color3.new(1, 1, 1)
+stopBtn.Font = Enum.Font.SourceSansBold
+stopBtn.TextSize = 20
+
+-- Variables
+local running = false
+local thread
+local remote = RS:FindFirstChild(REMOTE_NAME)
+
+-- Auto Plant Loop
+local function startPlanting()
+	if not remote then
+		warn("❌ Remote '" .. REMOTE_NAME .. "' not found!")
+		return
+	end
+
+	running = true
+	thread = task.spawn(function()
+		while running do
+			pcall(function()
+				remote:FireServer(FRUIT_NAME)
+			end)
+			task.wait(0.3)
+		end
+	end)
+end
+
+-- Stop Planting
+local function stopPlanting()
+	running = false
+	if thread then
+		task.cancel(thread)
+	end
+end
+
+-- Buttons
+startBtn.MouseButton1Click:Connect(startPlanting)
+stopBtn.MouseButton1Click:Connect(stopPlanting)
