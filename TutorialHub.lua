@@ -60,15 +60,15 @@ ContentPanel.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 ContentPanel.Parent = Main
 
 -- AutoFarm Button in Side Panel
-local AutoFarm = Instance.new("TextButton")
-AutoFarm.Size = UDim2.new(1, 0, 0, 40)
-AutoFarm.Position = UDim2.new(0, 0, 0, 10)
-AutoFarm.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-AutoFarm.Text = "⚙️ Auto Rejoin"
-AutoFarm.TextColor3 = Color3.new(1, 1, 1)
-AutoFarm.Font = Enum.Font.SourceSansBold
-AutoFarm.TextSize = 16
-AutoFarm.Parent = SidePanel
+local AutoRejoin = Instance.new("TextButton")
+AutoRejoin.Size = UDim2.new(1, 0, 0, 40)
+AutoRejoin.Position = UDim2.new(0, 0, 0, 10)
+AutoRejoin.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+AutoRejoin.Text = "⚙️ Auto Rejoin"
+AutoRejoin.TextColor3 = Color3.new(1, 1, 1)
+AutoRejoin.Font = Enum.Font.SourceSansBold
+AutoRejoin.TextSize = 16
+AutoRejoin.Parent = SidePanel
 
 -- Functionality Placeholder
 AutoFarm.MouseButton1Click:Connect(function()
