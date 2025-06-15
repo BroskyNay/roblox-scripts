@@ -54,69 +54,11 @@ Side.Size = UDim2.new(0, 140, 1, -30)
 Side.Position = UDim2.new(0, 0, 0, 30)
 Side.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 
--- Sidebar Button
-local AutoBtn = Instance.new("TextButton", Side)
-AutoBtn.Size = UDim2.new(1, 0, 0, 40)
-AutoBtn.Position = UDim2.new(0, 0, 0, 10)
-AutoBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-AutoBtn.Text = "⚙️  Auto Tools"
-AutoBtn.TextColor3 = Color3.new(1,1,1)
-AutoBtn.Font = Enum.Font.SourceSansBold
-AutoBtn.TextSize = 16
-
 -- Content Area
 local Content = Instance.new("Frame", Main)
 Content.Size = UDim2.new(1, -140, 1, -30)
 Content.Position = UDim2.new(0, 140, 0, 30)
 Content.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-
--- Rejoin Button
-local RejoinBtn = Instance.new("TextButton", Content)
-RejoinBtn.Size = UDim2.new(0, 150, 0, 45)
-RejoinBtn.Position = UDim2.new(0, 20, 0, 20)
-RejoinBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-RejoinBtn.BorderSizePixel = 0
-RejoinBtn.Text = "🔁  REJOIN"
-RejoinBtn.TextColor3 = Color3.new(1,1,1)
-RejoinBtn.TextSize = 20
-RejoinBtn.Font = Enum.Font.SourceSansBold
-RejoinBtn.Active = true
-RejoinBtn.MouseButton1Click:Connect(function()
-    TeleportService:Teleport(game.PlaceId, LocalPlayer)
-end)
-
--- Auto Buy Seed Button
-local BuySeedBtn = Instance.new("TextButton", Content)
-BuySeedBtn.Size = UDim2.new(0, 150, 0, 45)
-BuySeedBtn.Position = UDim2.new(0, 20, 0, 80)
-BuySeedBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-BuySeedBtn.BorderSizePixel = 0
-BuySeedBtn.Text = "🌱 Auto Buy Carrot"
-BuySeedBtn.TextColor3 = Color3.new(1,1,1)
-BuySeedBtn.TextSize = 16
-BuySeedBtn.Font = Enum.Font.SourceSansBold
-BuySeedBtn.Parent = Content
-
--- Auto Buy Logic
-local buying = false
-local remote = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("DataStream")
-local seedName = "Carrot Seed"
-
-BuySeedBtn.MouseButton1Click:Connect(function()
-    buying = not buying
-    BuySeedBtn.Text = buying and "✅ Buying Carrot..." or "🌱 Auto Buy Carrot"
-
-    if buying then
-        coroutine.wrap(function()
-            while buying do
-                pcall(function()
-                    remote:FireServer("Buy", seedName, 1)
-                end)
-                wait(2)
-            end
-        end)()
-    end
-end)
 
 -- Tab Button Logic
 AutoBtn.MouseButton1Click:Connect(function()
