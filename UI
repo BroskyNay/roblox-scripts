@@ -1,5 +1,3 @@
--- ✅ Custom UI (No library, fully original)
-
 -- Services
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
