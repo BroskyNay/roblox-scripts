@@ -86,6 +86,28 @@ RejoinBtn.MouseButton1Click:Connect(function()
     TeleportService:Teleport(game.PlaceId, LocalPlayer)
 end)
 
+-- Auto Buy Logic (toggle on/off)
+local buying = false
+
+BuySeedBtn.MouseButton1Click:Connect(function()
+    buying = not buying
+    BuySeedBtn.Text = buying and "✅ Buying Seeds..." or "🌱 Auto Buy Seed"
+    
+    if buying then
+        -- Start a coroutine so it doesn't freeze the UI
+        coroutine.wrap(function()
+            while buying do
+                pcall(function()
+                    -- EDIT THIS: Replace with the actual Remote path and args
+                    local remote = game:GetService("ReplicatedStorage"):WaitForChild("BuySeed")
+                    remote:FireServer("Tomato", 1) -- (seedName, amount)
+                end)
+                wait(2) -- Adjust delay as needed
+            end
+        end)()
+    end
+end)
+
 ----------------------------------------------------------------
 --  OPTIONAL ▸ hook sidebar button to open this page
 ----------------------------------------------------------------
