@@ -1,76 +1,82 @@
--- Auto Plant Fruit Script with Start / Stop UI
--- Works with Wave, Fluxus, etc.
+-- ✅ Auto Plant with Visible UI
+-- GUI + Start / Stop Button
+-- Works in real Roblox with executors like Wave, Fluxus, etc.
 
 -- SETTINGS
-local REMOTE_NAME = "PlantFruit" -- Change if your game's remote is different
-local FRUIT_NAME = "Apple"       -- Change to Banana, Orange, etc.
+local remoteName = "PlantFruit"  -- Change this if the remote is named differently
+local fruitType = "Apple"        -- Change this to any fruit name like Banana, Orange, etc.
 
--- SCRIPT
+-- Services
 local Players = game:GetService("Players")
-local RS = game:GetService("ReplicatedStorage")
-local LP = Players.LocalPlayer
-local GUI = Instance.new("ScreenGui", LP:WaitForChild("PlayerGui"))
-GUI.Name = "AutoPlantGUI"
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local player = Players.LocalPlayer
 
--- UI Frame
-local frame = Instance.new("Frame", GUI)
+-- Remote
+local remote = ReplicatedStorage:FindFirstChild(remoteName)
+if not remote then
+	warn("❌ Remote '" .. remoteName .. "' not found.")
+	return
+end
+
+-- Create UI
+local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+gui.Name = "AutoPlantUI"
+
+local frame = Instance.new("Frame", gui)
 frame.Size = UDim2.new(0, 200, 0, 100)
 frame.Position = UDim2.new(0.5, -100, 0.8, 0)
-frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+frame.BorderSizePixel = 0
 frame.Active = true
 frame.Draggable = true
 
--- Start Button
-local startBtn = Instance.new("TextButton", frame)
-startBtn.Size = UDim2.new(0.45, 0, 0.5, 0)
-startBtn.Position = UDim2.new(0.05, 0, 0.25, 0)
-startBtn.Text = "Start"
-startBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
-startBtn.TextColor3 = Color3.new(1, 1, 1)
-startBtn.Font = Enum.Font.SourceSansBold
-startBtn.TextSize = 20
+local title = Instance.new("TextLabel", frame)
+title.Size = UDim2.new(1, 0, 0.3, 0)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "🌱 Auto Plant"
+title.Font = Enum.Font.SourceSansBold
+title.TextColor3 = Color3.new(1, 1, 1)
+title.TextSize = 20
 
--- Stop Button
-local stopBtn = Instance.new("TextButton", frame)
-stopBtn.Size = UDim2.new(0.45, 0, 0.5, 0)
-stopBtn.Position = UDim2.new(0.5, 0, 0.25, 0)
-stopBtn.Text = "Stop"
-stopBtn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
-stopBtn.TextColor3 = Color3.new(1, 1, 1)
-stopBtn.Font = Enum.Font.SourceSansBold
-stopBtn.TextSize = 20
+local startButton = Instance.new("TextButton", frame)
+startButton.Size = UDim2.new(0.45, 0, 0.4, 0)
+startButton.Position = UDim2.new(0.05, 0, 0.5, 0)
+startButton.Text = "Start"
+startButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+startButton.TextColor3 = Color3.new(1, 1, 1)
+startButton.Font = Enum.Font.SourceSansBold
+startButton.TextSize = 18
 
--- Variables
+local stopButton = Instance.new("TextButton", frame)
+stopButton.Size = UDim2.new(0.45, 0, 0.4, 0)
+stopButton.Position = UDim2.new(0.5, 0, 0.5, 0)
+stopButton.Text = "Stop"
+stopButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+stopButton.TextColor3 = Color3.new(1, 1, 1)
+stopButton.Font = Enum.Font.SourceSansBold
+stopButton.TextSize = 18
+
+-- Logic
 local running = false
-local thread
-local remote = RS:FindFirstChild(REMOTE_NAME)
+local thread = nil
 
--- Auto Plant Loop
-local function startPlanting()
-	if not remote then
-		warn("❌ Remote '" .. REMOTE_NAME .. "' not found!")
-		return
-	end
-
+startButton.MouseButton1Click:Connect(function()
+	if running then return end
 	running = true
 	thread = task.spawn(function()
 		while running do
 			pcall(function()
-				remote:FireServer(FRUIT_NAME)
+				remote:FireServer(fruitType)
 			end)
-			task.wait(0.3)
+			task.wait(0.4)
 		end
 	end)
-end
+end)
 
--- Stop Planting
-local function stopPlanting()
+stopButton.MouseButton1Click:Connect(function()
 	running = false
 	if thread then
 		task.cancel(thread)
 	end
-end
-
--- Buttons
-startBtn.MouseButton1Click:Connect(startPlanting)
-stopBtn.MouseButton1Click:Connect(stopPlanting)
+end)
