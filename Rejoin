@@ -1,6 +1,3 @@
--- ✅ Rejoin Script with UI Button
--- Compatible with Wave, Fluxus, etc.
-
 -- Services
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
